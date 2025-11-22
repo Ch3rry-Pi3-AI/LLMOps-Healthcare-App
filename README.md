@@ -1,200 +1,101 @@
-# 🚑 LLMOps – Healthcare App
+🩺 LLMOps – Healthcare App
 
-### 🧠 Project Setup Branch
+### ⚙️ API Setup Branch
 
-This branch establishes the **foundational setup** for the **LLMOps Healthcare App**, including environment preparation, project scaffolding, backend skeleton, and Vercel configuration.
+This branch introduces the **core backend API** for the LLMOps Healthcare App.
+It transforms the empty backend skeleton created in the previous branch into a **fully functional FastAPI endpoint** integrated with Clerk authentication and OpenAI model streaming.
 
-Once this stage is complete, you’ll have:
+With this stage complete, your application now has a secure, production-ready backend route for generating structured medical summaries.
 
-* A working **Next.js + Tailwind** frontend
-* A **Python (FastAPI) backend skeleton** deployed locally via Vercel serverless functions
-* A project **linked to Vercel** with your `OPENAI_API_KEY` configured
+## 🧩 Overview
 
-## ⚡ PROJECT SETUP
+This branch adds the first working Python endpoint inside the `api/` directory.
+The new API:
 
-### 🧩 Overview
+* Accepts patient visit details
+* Authenticates with Clerk
+* Sends structured prompts to OpenAI
+* Streams the response in real time using **SSE (Server-Sent Events)**
 
-This guide walks you through the full base setup for the **Healthcare App**.
-By the end, you will have:
+This backend forms the clinical reasoning core of the system and will support all future healthcare features.
 
-* A Next.js frontend (TS + Tailwind)
-* All required npm packages (Markdown rendering, Clerk auth, streaming helpers, date picker)
-* A root-level `api/` folder for your Python backend
-* A `requirements.txt` for serverless Python functions
-* Vercel CLI installed and your project linked
-* Environment variables configured
+## 🧬 What We Implemented
 
-## 🪄 Step 1: Sign Up for Vercel
+### ✓ FastAPI Application
 
-Same as before — register at [https://vercel.com](https://vercel.com) and complete setup.
+A `FastAPI()` instance was created inside `api/index.py`.
 
-## 🧱 Step 2: Install Node.js
+### ✓ Clerk Authentication
 
-Install Node.js from [https://nodejs.org/en/download](https://nodejs.org/en/download) and verify:
+The `/api` route now uses `fastapi-clerk-auth` to validate Clerk-issued JWTs.
 
-```bash
-node --version
-npm --version
-```
+### ✓ Pydantic Data Model
 
-## 🖥️ Step 3: Create the Next.js Frontend
+The `Visit` model ensures clean, validated clinical input.
 
-```bash
-npx create-next-app@15.5.6 llmops-healthcare-app --typescript
-```
+### ✓ Prompt Construction
 
-Prompts:
+The system and user prompts were implemented to produce three medical sections:
 
-* Linter: **ESLint**
-* Tailwind: **y**
-* Use `src/`: **n**
-* App Router: **n**
-* Turbopack: **n**
-* Import alias: **n**
+* summary
+* next steps
+* patient-friendly email
 
-## 🧭 Step 4: Open Your Project
+### ✓ OpenAI Integration
 
-Open in Cursor → you’ll see the standard Next.js Pages Router layout.
+The endpoint streams output from the lightweight `"gpt-5-nano"` model.
 
-## 🧹 Step 5: Remove the Default `pages/api` Folder
+### ✓ SSE Streaming
 
-Right-click `pages/api` → **Delete**.
+The backend now sends `text/event-stream` updates for smooth, incremental UI rendering.
 
-## 🎨 Step 6: Tailwind CSS Basics
+## 📁 Updated Project Structure
 
-(Already included — utility classes overview.)
-
-## 📦 Step 7: Install Additional Frontend Dependencies
-
-```bash
-npm install react-markdown remark-gfm remark-breaks
-npm install @tailwindcss/typography
-npm install @clerk/nextjs
-npm install @microsoft/fetch-event-source
-
-npm install react-datepicker
-npm install --save-dev @types/react-datepicker
-```
-
-**Packages explained:**
-
-* **react-markdown / remark-gfm / remark-breaks**
-  For medical responses rendered as clean Markdown.
-
-* **@tailwindcss/typography**
-  Beautiful, readable medical documentation layouts.
-
-* **@clerk/nextjs**
-  Authentication (sign-in, user profiles, subscription tiers).
-
-* **@microsoft/fetch-event-source**
-  SSE streaming for real-time model output.
-
-* **react-datepicker** + TypeScript types
-  Used for date selection in patient visits / appointment flows.
-
-## 🧬 Step 8: Add the Python Backend Skeleton
-
-### 8.1 Create `api/` Folder
-
-Right-click the root → **New Folder → `api`**
-
-### 8.2 Create `api/index.py`
-
-Inside the folder, create an empty file `index.py` — this will become your FastAPI endpoint file in the next branch.
-
-### 8.3 Create `requirements.txt`
-
-At the root:
+Only the new backend file is annotated.
 
 ```
-fastapi
-uvicorn
-openai
-fastapi-clerk-auth
-pydantic
+llmops-healthcare-app/
+├── api/
+│   └── index.py          # NEW: FastAPI consultation-summary endpoint with Clerk auth + SSE
+├── pages/
+├── public/
+├── styles/
+├── package.json
+├── requirements.txt
+├── tsconfig.json
+└── next.config.js
 ```
 
-**Package purposes:**
+## 🩻 API Behaviour Summary
 
-* **fastapi** – Backend framework for clinical AI endpoints
-* **uvicorn** – Local server
-* **openai** – Model calls
-* **fastapi-clerk-auth** – Auth guard for protected clinical endpoints
-* **pydantic** – Request/response validation
+The `/api` endpoint now:
 
-## ⚙️ Step 9: Minimal Vercel Configuration
+1. Validates authentication using Clerk
+2. Accepts the `Visit` payload
+3. Generates a structured clinical prompt
+4. Streams model output using SSE
+5. Returns:
 
-No `vercel.json` is needed.
-Vercel automatically:
+   * doctor summary
+   * next steps
+   * patient-friendly email
+     all in real time
 
-* Treats the project as **Next.js**
-* Detects `api/index.py` as a **Python serverless function**
+## 🧭 Next Stage Preview → `02_app_configuration`
 
-## 🧰 Step 10: Install Vercel CLI
-
-```bash
-npm install -g vercel
-vercel login
-```
-
-## 🌐 Step 11: Link the Project to Vercel
-
-From the project root:
-
-```bash
-vercel link
-```
-
-Prompts:
-
-* Set up and link? → **Yes**
-* Scope → **Your personal account**
-* Link to existing project? → **No**
-* Project name → `llmops-healthcare-app`
-* Directory → Press **Enter**
-
-## 🔑 Step 12: Add Your OpenAI API Key
-
-```bash
-vercel env add OPENAI_API_KEY
-```
-
-Apply to:
-
-* development
-* preview
-* production
-
-## ✅ Completion Checklist
-
-| Component                       | Description                            | Status |
-| ------------------------------- | -------------------------------------- | :----: |
-| Next.js Frontend                | TypeScript + Tailwind scaffold         |    ✅   |
-| Frontend Dependencies Installed | Markdown, Clerk, SSE, date picker      |    ✅   |
-| Python Backend Skeleton         | `api/`, `index.py`, `requirements.txt` |    ✅   |
-| Vercel Project Linked           | Project connected locally              |    ✅   |
-| OpenAI API Key Configured       | Stored securely in Vercel env          |    ✅   |
-| Git Branch Initialised          | `00_project_setup` branch created      |    ✅   |
-
-## 🧭 Next Stage Preview → `01_backend_api`
-
-The next branch (`01_backend_api`) will focus exclusively on implementing the **backend API** inside:
+The next branch will focus on **Next.js application configuration**, setting up the global wrapper and document structure inside:
 
 ```
-/api/index.py
+pages/_app.tsx
+pages/_document.tsx
 ```
 
 This will include:
 
-* Creating the `FastAPI()` app
-* Adding Clerk authentication (`fastapi-clerk-auth`)
-* Defining the `Visit` model (`pydantic`)
-* Building the consultation summary endpoint
-* Implementing **Server-Sent Events (SSE)** streaming for AI output
-* Integrating the OpenAI client (`openai`)
-* Handling patient visit notes and generating:
+* Wrapping the entire frontend with **ClerkProvider**
+* Loading global CSS and component-level styles
+* Ensuring `react-datepicker` styles are available
+* Adding metadata (title, description) to `<Head>`
+* Establishing the global HTML layout used by all pages
 
-  * **Doctor summary**
-  * **Next steps**
-  * **Patient-friendly email draft**
+This completes the foundation required before building the healthcare UI.
