@@ -1,74 +1,64 @@
-# 🩺 LLMOps – Healthcare App
+# 🌐 LLMOps – Healthcare App
 
-### 🧾 Consultation Form Branch
+### 🎨 Landing Page Branch
 
-This branch introduces the **first fully interactive clinical interface** for the LLMOps Healthcare App.
-It adds a subscription-protected consultation form that allows healthcare professionals to input patient details, submit clinical notes, and receive a **real-time AI-generated summary** streamed from the backend.
+This branch introduces the **public landing page** for MediNotes Pro, replacing the default scaffolded homepage with a polished, marketing-ready interface.
 
-This is the first major UI feature in the application and marks the transition from setup/configuration to real clinical functionality.
+The landing page is the first experience users have with the platform, offering a professional, trustworthy entry point into the app while providing seamless sign-in and navigation options.
 
 ## 🧩 Overview
 
-This branch adds a new page, `product.tsx`, which includes:
+This branch replaces the starter `index.tsx` file with a fully designed landing experience featuring:
 
-* A fully interactive **consultation form**
-* Date selection via **React DatePicker**
-* Form validation
-* Authenticated API requests via **Clerk JWTs**
-* Live **SSE streaming** from the backend
-* Markdown-rendered summaries (GFM + soft line breaks)
-* Subscription gating using `<Protect />`
-* A premium-plan marketing fallback for non-subscribed users
-* A top-right authenticated user menu via `<UserButton />`
+* 🌈 A gradient hero section
+* 🧩 Feature highlights grid
+* 🔐 Adaptive navigation (Sign In / Go to App)
+* 🧭 Clear call-to-action buttons
+* 👤 User menu when authenticated
+* 🛡️ Trust indicators (HIPAA | Secure | Professional)
 
-The result is a polished, professional clinical workflow suitable for real-world healthcare use.
+The page is fully integrated with Clerk for authentication awareness and provides a branded identity for MediNotes Pro.
 
 ## 🛠️ What We Implemented
 
-### ✓ Consultation Form Component
+### ✓ New Hero & Branding
 
-Includes fields for:
+A redesigned hero section with:
 
-* 👤 Patient name
-* 📅 Visit date
-* 📝 Consultation notes
+* Large gradient headline
+* Professional tagline
+* Clean, modern layout
 
-The form handles submission, validation, and passes data to the `/api` FastAPI endpoint.
+### ✓ Clerk-Aware Navigation
 
-### ✓ Real-Time Streaming (SSE)
+* **Signed-out users** see a modal **Sign In** button
+* **Signed-in users** see:
 
-The form uses **fetchEventSource** to stream the model’s response token-by-token and display it live in the UI.
+  * Go to App button → `/product`
+  * `<UserButton />` menu
 
-### ✓ Markdown Rendering
+### ✓ Feature Grid
 
-AI responses are rendered cleanly with:
+Visual feature cards highlighting:
 
-* `react-markdown`
-* `remark-gfm`
-* `remark-breaks`
+* 📋 Professional summaries
+* ✅ Action items
+* 📧 Patient emails
 
-Ensuring readable, clinical-grade output.
+Each card uses subtle gradients, shadows, and responsive styling that match your existing aesthetic.
 
-### ✓ Subscription Protection
+### ✓ CTA Buttons
 
-The entire form is wrapped in:
+* “Start Free Trial” for new visitors
+* “Open Consultation Assistant” for authenticated users
 
-```tsx
-<Protect plan="premium_subscription">
-```
+### ✓ Trust Indicators
 
-Unauthenticated or unsubscribed users see a premium plan page with a pricing table.
-
-### ✓ UI Enhancements
-
-* Gradient backgrounds
-* Smooth transitions
-* Dark mode compatibility
-* Professional layout suitable for medical professionals
+A subtle footer reinforcing the app’s professionalism.
 
 ## 📁 Updated Project Structure
 
-Only the new file in this branch is annotated.
+Only the new/modified file is annotated.
 
 ```
 llmops-healthcare-app/
@@ -77,8 +67,8 @@ llmops-healthcare-app/
 ├── pages/
 │   ├── _app.tsx
 │   ├── _document.tsx
-│   ├── index.tsx
-│   └── product.tsx     # NEW: Consultation Form + subscription-protected workflow
+│   ├── index.tsx     # NEW: Fully designed landing page for MediNotes Pro
+│   └── product.tsx
 ├── public/
 ├── styles/
 ├── package.json
@@ -88,27 +78,16 @@ llmops-healthcare-app/
 
 ## 💡 Why This Matters
 
-With this branch complete, the application now includes:
+This branch transforms the project from a raw prototype into a **professional, user-facing platform**.
+It establishes brand identity, helps with onboarding, and integrates smoothly with your clinical workflow page at `/product`.
 
-* A **real clinical UI**
-* Streaming interaction with your AI backend
-* Full authentication + subscription logic
-* A polished experience for medical professionals
+## 🧭 Next Stage Preview → Clerk Authentication & Subscription Setup
 
-This completes the core “LLM-powered consultation summary” functionality end-to-end.
+The next branch will focus on integrating:
 
-## 🧭 Next Stage Preview → `04_landing_page`
+* 🔐 **Full Clerk authentication flows**
+* 💳 **Subscription protection setup for premium features**
+* 🧩 Required Clerk configuration files and dashboards
+* 🛠️ Any environment variables or middleware needed for role/plan checks
 
-The next branch will focus on building the **public landing page** by updating:
-
-```
-pages/index.tsx
-```
-
-This will include:
-
-* A navigation bar with authentication controls
-* A hero section
-* Feature highlights
-* CTA buttons linked to `/product`
-* A polished user experience for first-time visitors
+This lays the groundwork for secure, role-based access to clinical features.
