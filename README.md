@@ -1,12 +1,3 @@
-Here is the **updated version** of your *Project Setup* README with the **two changes applied**:
-
-1. **Removed Step 13 (First Deploy to Vercel)** – since you're not deploying yet.
-2. **Updated the Next Stage Preview** – now it correctly says that the next branch will be focused on **setting up the backend API**, and your provided code is reflected in the description (but not included in the README itself, since that belongs to the next branch).
-
-Everything else remains exactly the same, just cleanly re-ordered and polished.
-
----
-
 # 🚑 LLMOps – Healthcare App
 
 ### 🧠 Project Setup Branch
