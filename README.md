@@ -1,93 +1,226 @@
-# 🌐 LLMOps – Healthcare App
+# 🔐 LLMOps – Healthcare App
 
-### 🎨 Landing Page Branch
+### 🧾 Authentication & Subscription Setup Branch
 
-This branch introduces the **public landing page** for MediNotes Pro, replacing the default scaffolded homepage with a polished, marketing-ready interface.
+This branch adds **full Clerk authentication** and **subscription-based access control**, transforming the Healthcare App into a secure, production-ready SaaS platform.
+Users can now:
 
-The landing page is the first experience users have with the platform, offering a professional, trustworthy entry point into the app while providing seamless sign-in and navigation options.
+* Sign in using modern authentication providers
+* Obtain secure Clerk-issued JWTs
+* Access plan-gated clinical features
+* Subscribe to premium plans
+* Manage billing & subscription settings directly via Clerk
+
+This is the foundation that enables your AI-powered healthcare application to serve real users safely and professionally.
 
 ## 🧩 Overview
 
-This branch replaces the starter `index.tsx` file with a fully designed landing experience featuring:
+This combined stage sets up:
 
-* 🌈 A gradient hero section
-* 🧩 Feature highlights grid
-* 🔐 Adaptive navigation (Sign In / Go to App)
-* 🧭 Clear call-to-action buttons
-* 👤 User menu when authenticated
-* 🛡️ Trust indicators (HIPAA | Secure | Professional)
+### 🔐 1. User Authentication
 
-The page is fully integrated with Clerk for authentication awareness and provides a branded identity for MediNotes Pro.
+* Email, Google, GitHub (and optionally Apple) sign-in
+* JWT issuance by Clerk
+* Backend verification using Clerk **JWKS**
+* Secure environment variable configuration
 
-## 🛠️ What We Implemented
+### 💳 2. Subscription & Billing
 
-### ✓ New Hero & Branding
+* A premium plan (`premium_subscription`)
+* Subscription purchasing via Clerk Billing
+* Automatic access control using:
 
-A redesigned hero section with:
+  ```tsx
+  <Protect plan="premium_subscription">
+  ```
+* Subscription management through `<UserButton />`
 
-* Large gradient headline
-* Professional tagline
-* Clean, modern layout
+When both parts are complete, only subscribed, authenticated users can access premium clinical functionality.
 
-### ✓ Clerk-Aware Navigation
+## 🧑‍💻 Authentication Setup
 
-* **Signed-out users** see a modal **Sign In** button
-* **Signed-in users** see:
+### Step 1: Create a Clerk Account
 
-  * Go to App button → `/product`
-  * `<UserButton />` menu
+1. Go to **clerk.com** → Sign Up
+2. Create your account
+3. Create a new **Application**
 
-### ✓ Feature Grid
+### Step 2: Configure Application Sign-In
 
-Visual feature cards highlighting:
+Enable:
 
-* 📋 Professional summaries
-* ✅ Action items
-* 📧 Patient emails
+* Email
+* Google
+* GitHub
+* Apple (optional)
 
-Each card uses subtle gradients, shadows, and responsive styling that match your existing aesthetic.
+### Step 3: Add Authentication Environment Variables
 
-### ✓ CTA Buttons
+Create `.env.local`:
 
-* “Start Free Trial” for new visitors
-* “Open Consultation Assistant” for authenticated users
-
-### ✓ Trust Indicators
-
-A subtle footer reinforcing the app’s professionalism.
-
-## 📁 Updated Project Structure
-
-Only the new/modified file is annotated.
-
-```
-llmops-healthcare-app/
-├── api/
-│   └── index.py
-├── pages/
-│   ├── _app.tsx
-│   ├── _document.tsx
-│   ├── index.tsx     # NEW: Fully designed landing page for MediNotes Pro
-│   └── product.tsx
-├── public/
-├── styles/
-├── package.json
-├── tsconfig.json
-└── next.config.js
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key_here
+CLERK_SECRET_KEY=your_secret_key_here
 ```
 
-## 💡 Why This Matters
+Add `.env.local` to `.gitignore`.
 
-This branch transforms the project from a raw prototype into a **professional, user-facing platform**.
-It establishes brand identity, helps with onboarding, and integrates smoothly with your clinical workflow page at `/product`.
+### Step 4: Configure Backend JWT Verification (JWKS)
 
-## 🧭 Next Stage Preview → Clerk Authentication & Subscription Setup
+In Clerk Dashboard:
 
-The next branch will focus on integrating:
+* Configure → API Keys → Copy **JWKS URL**
 
-* 🔐 **Full Clerk authentication flows**
-* 💳 **Subscription protection setup for premium features**
-* 🧩 Required Clerk configuration files and dashboards
-* 🛠️ Any environment variables or middleware needed for role/plan checks
+Add to `.env.local`:
 
-This lays the groundwork for secure, role-based access to clinical features.
+```env
+CLERK_JWKS_URL=your_jwks_url_here
+```
+
+This allows your FastAPI backend to verify Clerk-issued tokens cryptographically.
+
+### Step 5: Add Env Vars to Vercel
+
+```bash
+vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+vercel env add CLERK_SECRET_KEY
+vercel env add CLERK_JWKS_URL
+```
+
+Add them to all environments (development, preview, production).
+
+## 💳 Subscription Setup
+
+### Step 6: Enable Clerk Billing
+
+* Clerk Dashboard → Configure → **Subscription Plans**
+* Enable Billing
+
+### Step 7: Create the Premium Subscription Plan
+
+Use **exact plan key:**
+
+```
+premium_subscription
+```
+
+Configure pricing (monthly, optional annual billing).
+Save the plan.
+
+### Step 8: (Optional) Connect Stripe
+
+* Billing → Settings
+* Switch to Stripe if you want real payments
+* Otherwise, Clerk's built-in gateway handles test mode subscriptions
+
+### Step 9: Test the Subscription Flow
+
+1. Deploy
+2. Sign in
+3. Navigate to `/product`
+4. If unsubscribed → `PricingTable` appears
+5. Subscribe
+6. Access unlocks instantly
+
+### Step 10: Manage Subscriptions
+
+Accessible through:
+
+```
+<UserButton />
+```
+
+Users can view/cancel/change their subscription directly in the Clerk dashboard.
+
+## 🧠 How Everything Works Together
+
+### Frontend
+
+* Clerk handles the authentication UI
+* JWT obtained via `getToken()` is sent to the backend
+* Premium pages use `<Protect plan="premium_subscription">`
+
+### Backend
+
+* FastAPI verifies JWT using Clerk’s JWKS
+* The clinical `/api` endpoint ensures secure, authenticated access
+
+### Billing
+
+* Clerk or Stripe processes payments
+* Subscription status is synced automatically
+* No backend modifications required
+
+## 🛠️ Troubleshooting
+
+**“Plan not found”**
+
+* Check that plan key is **exactly** `premium_subscription`
+* Make sure Billing is enabled
+
+**Pricing table still showing after subscribing**
+
+* Sign out/in
+* Check subscription status in Clerk dashboard
+
+**403 errors from backend**
+
+* Verify JWKS URL
+* Ensure Authorization header: `Bearer <JWT>`
+
+## 📦 Deploying Your Application for the First Time
+
+Now that Clerk authentication and subscriptions are fully configured, you can deploy the Healthcare App.
+
+### Step 1 — Initial Production Deployment
+
+Run:
+
+```bash
+vercel .
+```
+
+Because this is your *first deployment*, Vercel will treat this as a **production deployment** automatically and give you a live URL.
+
+### Step 2 — Deploying Updates Afterward
+
+By default:
+
+```bash
+vercel .
+```
+
+deploys to **preview**.
+
+To deploy updates to **production**, use:
+
+```bash
+vercel --prod
+```
+
+This ensures your changes go live safely and intentionally.
+
+### 📸 Example Output After First Deployment
+
+Below is what you should expect to see after running the first deployment command:
+
+<p align="center">
+  <img src="img/app/app_landing_page.png" width="100%" alt="Vercel First Deployment Output">
+</p>
+
+This confirms that the app has successfully built, deployed, and is live in production.
+
+## ✅ Completion Checklist
+
+| Component                       | Description                                         | Status |
+| ------------------------------- | --------------------------------------------------- | :----: |
+| Authentication Enabled          | Clerk login, JWTs, and env vars configured          |    ✅   |
+| Backend JWT Verification Active | FastAPI verifies Clerk tokens via JWKS              |    ✅   |
+| Billing Enabled                 | Subscription plans active in Clerk                  |    ✅   |
+| Premium Plan Created            | `premium_subscription` created and active           |    ✅   |
+| Product Page Protected          | `<Protect plan="premium_subscription">` applied     |    ✅   |
+| PricingTable Fallback Working   | Non-subscribed users see correct upgrade prompt     |    ✅   |
+| Subscription Upgrade Flow Works | Users can subscribe and gain access instantly       |    ✅   |
+| User Subscription Management    | Managed via `<UserButton />`                        |    ✅   |
+| Initial Production Deployment   | Completed using `vercel .`                          |    ✅   |
+| Ongoing Deployments             | Ready to use `vercel --prod` for production updates |    ✅   |
