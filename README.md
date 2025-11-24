@@ -26,7 +26,7 @@ By the end, you will have:
 
 ## 🪄 Step 1: Sign Up for Vercel
 
-Same as before — register at [https://vercel.com](https://vercel.com) and complete setup.
+Register at [https://vercel.com](https://vercel.com) and complete setup.
 
 ## 🧱 Step 2: Install Node.js
 
