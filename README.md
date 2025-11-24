@@ -80,14 +80,3 @@ llmops-healthcare-app/
 
 This branch transforms the project from a raw prototype into a **professional, user-facing platform**.
 It establishes brand identity, helps with onboarding, and integrates smoothly with your clinical workflow page at `/product`.
-
-## 🧭 Next Stage Preview → Clerk Authentication & Subscription Setup
-
-The next branch will focus on integrating:
-
-* 🔐 **Full Clerk authentication flows**
-* 💳 **Subscription protection setup for premium features**
-* 🧩 Required Clerk configuration files and dashboards
-* 🛠️ Any environment variables or middleware needed for role/plan checks
-
-This lays the groundwork for secure, role-based access to clinical features.
