@@ -96,19 +96,3 @@ With this branch complete, the application now includes:
 * A polished experience for medical professionals
 
 This completes the core “LLM-powered consultation summary” functionality end-to-end.
-
-## 🧭 Next Stage Preview → `04_landing_page`
-
-The next branch will focus on building the **public landing page** by updating:
-
-```
-pages/index.tsx
-```
-
-This will include:
-
-* A navigation bar with authentication controls
-* A hero section
-* Feature highlights
-* CTA buttons linked to `/product`
-* A polished user experience for first-time visitors
