@@ -80,22 +80,3 @@ The `/api` endpoint now:
    * next steps
    * patient-friendly email
      all in real time
-
-## 🧭 Next Stage Preview → `02_app_configuration`
-
-The next branch will focus on **Next.js application configuration**, setting up the global wrapper and document structure inside:
-
-```
-pages/_app.tsx
-pages/_document.tsx
-```
-
-This will include:
-
-* Wrapping the entire frontend with **ClerkProvider**
-* Loading global CSS and component-level styles
-* Ensuring `react-datepicker` styles are available
-* Adding metadata (title, description) to `<Head>`
-* Establishing the global HTML layout used by all pages
-
-This completes the foundation required before building the healthcare UI.
