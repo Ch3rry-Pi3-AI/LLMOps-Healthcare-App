@@ -176,25 +176,3 @@ Apply to:
 | Vercel Project Linked           | Project connected locally              |    ✅   |
 | OpenAI API Key Configured       | Stored securely in Vercel env          |    ✅   |
 | Git Branch Initialised          | `00_project_setup` branch created      |    ✅   |
-
-## 🧭 Next Stage Preview → `01_backend_api`
-
-The next branch (`01_backend_api`) will focus exclusively on implementing the **backend API** inside:
-
-```
-/api/index.py
-```
-
-This will include:
-
-* Creating the `FastAPI()` app
-* Adding Clerk authentication (`fastapi-clerk-auth`)
-* Defining the `Visit` model (`pydantic`)
-* Building the consultation summary endpoint
-* Implementing **Server-Sent Events (SSE)** streaming for AI output
-* Integrating the OpenAI client (`openai`)
-* Handling patient visit notes and generating:
-
-  * **Doctor summary**
-  * **Next steps**
-  * **Patient-friendly email draft**
