@@ -80,16 +80,3 @@ This setup ensures:
 * 🧩 **The next UI components can rely on a stable global foundation**
 
 With this branch complete, the frontend is structurally ready for real functionality.
-
-## 🧭 Next Stage Preview → `03_consultation_form`
-
-The next branch will introduce the interactive **Consultation Form**, including:
-
-* 🧍 Patient name input
-* 📅 DatePicker for visit date
-* 📝 Detailed notes textbox
-* 🔐 Clerk-protected access with subscription gating
-* 📡 Streaming AI output via SSE
-* 🧾 Markdown-rendered clinical summaries
-
-This will be the first fully interactive clinical workflow in the Healthcare App.
